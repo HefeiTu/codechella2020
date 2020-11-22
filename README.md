@@ -6,4 +6,4 @@ could know what their parents are doing every day and they could see the dairy l
 ## Technology Used
 - Frontend: React.js, Material UI, Geocode, AWS-SDK
 - Backend: Django, MongoDB
-- ML: 
+- ML: AWS Transcribe & Google Speech, AWS Comprehend, GPT2
