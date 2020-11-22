@@ -1,12 +1,17 @@
-# Memory Hub
+# Memory Hub #Codechella
 
-Memory Hub could record old people's speech in a fixed interval of time. Then, it could generate a diary according old people's words day by day. So their children
-could know what their parents are doing every day and they could see the dairy later.
+To create a space for patients with dementia to record their daily routines. Memory hub will not only serve as a gentle everyday reminder for patients with memory loss conditions, but also help the relatives and friends of the patients be more aware of the emotions and behaviors of the patients.
+
+We integrated speech recognition, sentiment analysis, and topic modeling to let patients record and share their daily activities with the people who care deeply about them. 
+
+![image-20201122103635030](/Users/jzh/Library/Application Support/typora-user-images/image-20201122103635030.png)
 
 ## Technology Used
 - Frontend: React.js, Material UI, Geocode, AWS-SDK, mic-recorder-to-mp3
 - Backend: Django, MongoDB
 - ML: AWS Transcribe & Google Speech, AWS Comprehend, GPT2
+
+
 
 ## Flow Chart
 
@@ -16,7 +21,15 @@ could know what their parents are doing every day and they could see the dairy l
 
 ## Frontend
 
-### Endpoint
+### Run
+
+Require Docker
+
+```
+cd memory/
+docker build -t memoryhub . 
+docker run memoryhub
+```
 
 
 
@@ -32,7 +45,106 @@ could know what their parents are doing every day and they could see the dairy l
 
 ## Backend
 
+### Run
+
+Require Python >= 3.6
+
+Require MongoDB running
+
+```
+cd memorybackend/
+pip install -r requirements.txt
+python manage.py runserver
+```
+
+
+
+### Endpoint for dev
+
+```json
+http://54.157.143.191:8000/admin/
+username: admin
+password: codechella
+```
+
+
+
+### API
+
+
+
+| Method | API                    | Description                                                  |
+| ------ | ---------------------- | ------------------------------------------------------------ |
+| GET    | get-summary            | Send back the daily summary as the journal                   |
+| POST   | add-recording-location | Get location through GPS and transfrom through Google map API when Recording invoked |
+
+
+
+### Workflow
+
+Frontend sent S3 information and GPS information in a fixed length of period.
+
+When frontend request a story, the backend will get the latest 20 speech information, translate them to text files using google speech_recognition API.
+
+Then, using Amazon comprehend to analyze those text files one by one, and pick out 5 most positive text files.
+
+then it will put those 5 most positive text files into NLP processing unit based on GPT2, which could then help generate a diary.
+
+This diary will be sent to tweet immediately and also sent to frontend at the same time so that the client could see the diary from either their cellphone or their twitter!
+
 
 
 ## Machine Learning
+
+### AWS Transcribe
+
+```
+https://aws.amazon.com/transcribe/
+```
+
+
+
+### AWS Comprehend
+
+```
+https://aws.amazon.com/comprehend/
+```
+
+
+
+### Gpt2 
+
+Gpt2 package is used to transfer the words extracted from the NLP APIs to the detailed stories. 
+
+```
+Quick start:
+
+Environment Installation:
+
+$ git clone https://github.com/graykode/gpt-2-Pytorch && cd gpt-2-Pytorch
+
+\# download huggingface's pytorch model 
+
+$ curl --output gpt2-pytorch_model.bin https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-pytorch_model.bin
+
+\# setup requirements, if using mac os, then run additional setup as descibed below
+
+$ pip install -r requirements.txt
+
+
+
+License
+
+\1. OpenAi/GPT2 follow MIT license, huggingface/pytorch-pretrained-BERT is Apache license.
+
+\2. I follow MIT license with original GPT2 repository
+
+
+
+Acknowledgement
+
+Tae Hwan Jung(Jeff Jung) @graykode, Jeff Wu(@WuTheFWasThat), Thomas Wolf(@thomwolf) for allowing referring code.
+```
+
+
 
