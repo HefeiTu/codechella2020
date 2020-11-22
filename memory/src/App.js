@@ -11,6 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import MicButton from './mic';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -81,6 +82,9 @@ function App() {
       <Typography variant="h4" className={classes.blogTitle}>
           Tweets
       </Typography>
+      <MicButton />
+      <br />
+      <br />
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={4}>
           <Card className={classes.card}>

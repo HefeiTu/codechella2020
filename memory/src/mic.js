@@ -1,54 +1,86 @@
-export default class MicButton extends Component {
-    constructor(props) {
-        super(props);
+import React from 'react';
+import './App.css';
+import { makeStyles } from '@material-ui/core/styles';
+import MicRecorder from 'mic-recorder-to-mp3';
+import Button from '@material-ui/core/Button';
+import AWSConnection from './s3Connection';
+import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
+import Pause from '@material-ui/icons/Stop';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      '& > *': {
+        margin: theme.spacing(2),
+      },
+    },
+    button: {
+        [theme.breakpoints.down("sm")]: {
+            color: "secondary"
+        },
     }
+  }));
 
-    startRecording() {
-        recorder.start().then(() => {
-        button.textContent = 'Stop recording';
-        button.classList.toggle('btn-danger');
-        button.removeEventListener('click', startRecording);
-        button.addEventListener('click', stopRecording);
-    }).catch((e) => {
-        console.error(e);
-    });
+const Mp3Recorder = new MicRecorder({ bitRate: 128 });
+
+class MicButton extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      isRecording: false,
+      isBlocked: false,
+    };
+  }
+
+  start = () => {
+    if (this.state.isBlocked) {
+      console.log('Permission Denied');
+    } else {
+      Mp3Recorder
+        .start()
+        .then(() => {
+          this.setState({ isRecording: true });
+        }).catch((e) => console.error(e));
     }
+  };
 
-    stopRecording() {
-        recorder.stop().getMp3().then(([buffer, blob]) => {
-        console.log(buffer, blob);
-        const file = new File(buffer, 'music.mp3', {
-            type: blob.type,
-            lastModified: Date.now()
-        });
+  stop = () => {
+    Mp3Recorder
+      .stop()
+      .getMp3()
+      .then(([buffer, blob]) => {
+        // const blobURL = URL.createObjectURL(blob)
+        var aws = new AWSConnection();
+        var now = new Date();
+        var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+        var temp = utc.toUTCString();
+        var final = temp.split(/:|,| /);
+        final.splice(1, 1)
+        aws.uploadFileToS3(final.join("-"), blob);
+        this.setState({ isRecording: false });
+      }).catch((e) => console.log(e));
+  };
 
-        const li = document.createElement('li');
-        const player = new Audio(URL.createObjectURL(file));
-        player.controls = true;
-        li.appendChild(player);
-        document.querySelector('#playlist').appendChild(li);
+  componentDidMount() {
+    navigator.getUserMedia({ audio: true },
+      () => {
+        console.log('Permission Granted');
+        this.setState({ isBlocked: false });
+      },
+      () => {
+        console.log('Permission Denied');
+        this.setState({ isBlocked: true })
+      },
+    );
+  }
 
-        button.textContent = 'Start recording';
-        button.classList.toggle('btn-danger');
-        button.removeEventListener('click', stopRecording);
-        button.addEventListener('click', startRecording);
-    }).catch((e) => {
-        console.error(e);
-    });
+  render(){
+    return (
+      <div className={useStyles.button}>
+          <Button style={{ "min-length": "20px", width: "13%", fontSize: "1.5vw" }} variant="contained" color="primary" onClick={this.start} startIcon={<KeyboardVoiceIcon />} disabled={this.state.isRecording}>Record</Button>
+          <Button style={{ "min-length": "20px", width: "13%", fontSize: "1.5vw"}} variant="contained" color="secondary" onClick={this.stop} startIcon={<Pause />} disabled={!this.state.isRecording}>Stop</Button>
+      </div>
+    );
+  }
+}
 
-    }
-
-        render() {
-            const recorder = new MicRecorder({
-                bitRate: 128
-                });
-            return (<div className={useStyles.root}>
-                <Button variant="contained" color="primary" onClick={this.componentDidMount} >
-                    Get my location
-                </Button>
-                {/* <Typography variant="h1" component="h2" gutterBottom>
-                        Welcome to the survey 
-                </Typography> */}
-            </div>);
-        }
-    }
+export default MicButton;
