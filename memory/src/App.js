@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-// import Container from '@material-ui/core/container';
+import Container from '@material-ui/core/container';
 import Grid from '@material-ui/core/grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -78,7 +78,7 @@ function App() {
       <Box className={classes.hero}>
         <Box>Cathy Wang's Memory</Box>
       </Box>
-      {/* <Container maxWidth="lg" className={classes.blogsContainer}> */}
+      <Container maxWidth="lg" className={classes.blogsContainer}>
       <Typography variant="h4" className={classes.blogTitle}>
           Tweets
       </Typography>
@@ -204,7 +204,7 @@ function App() {
               </Card>
         </Grid>
       </Grid>
-      {/* </Container> */}
+      </Container>
     </div>
   );
 }
