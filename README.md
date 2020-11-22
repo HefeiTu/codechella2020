@@ -4,6 +4,7 @@ To create a space for patients with dementia to record their daily routines. Mem
 
 We integrated speech recognition, sentiment analysis, and topic modeling to let patients record and share their daily activities with the people who care deeply about them. 
 
+![show2](https://s3.ax1x.com/2020/11/22/DGDsG8.png)
 
 
 ## Technology Used
