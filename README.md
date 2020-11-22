@@ -4,7 +4,7 @@ To create a space for patients with dementia to record their daily routines. Mem
 
 We integrated speech recognition, sentiment analysis, and topic modeling to let patients record and share their daily activities with the people who care deeply about them. 
 
-![image-20201122103635030](/Users/jzh/Library/Application Support/typora-user-images/image-20201122103635030.png)
+
 
 ## Technology Used
 - Frontend: React.js, Material UI, Geocode, AWS-SDK, mic-recorder-to-mp3
