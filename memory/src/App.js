@@ -78,7 +78,7 @@ function App() {
       <Box className={classes.hero}>
         <Box>Cathy Wang's Memory</Box>
       </Box>
-      <Container maxWidth="lg" className={classes.blogsContainer}>
+      {/* <Container maxWidth="lg" className={classes.blogsContainer}> */}
       <Typography variant="h4" className={classes.blogTitle}>
           Tweets
       </Typography>
@@ -204,7 +204,7 @@ function App() {
               </Card>
         </Grid>
       </Grid>
-      </Container>
+      {/* </Container> */}
     </div>
   );
 }
