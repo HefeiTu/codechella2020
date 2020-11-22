@@ -2,7 +2,7 @@ FROM node:alpine
 WORKDIR '/app'
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
-RUN npm install material-ui@next --force
+RUN npm install material-ui@next --legacy-peer-deps
 COPY . .
 RUN npm run build
 
